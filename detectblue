@@ -1,0 +1,55 @@
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
+Mat imgLab,imgRGB,imgRUV, imgHSV;
+Mat  mask1,mask2,mask3;
+int hmin = 90, smin = 150, vmin =90;
+int hmax = 120, smax = 235, vmax = 125;
+int lmin=30, amin=115, bmin=80;
+int lmax=70, amax=140, bmax=110;
+int rmin=10, gmin=40, Bmin=90;
+int rmax=30, gmav=60, Bmax=120;
+//int ymin, umin, vmin;
+//int ymax, umax, vmax;
+
+int main()
+{
+
+	Mat img = imread("images/rub%02d.jpg");
+	cvtColor(img, imgHSV, COLOR_BGR2HSV);
+	cvtColor(img,imgLab, COLOR_BGR2Lab);
+	cvtColor(img,imgRGB, COLOR_BGR2RGB);
+	//cvtColor(img, imgRUV, COLOR_BGR2);
+
+
+
+	while (true) {
+
+		Scalar lower1(hmin, smin, vmin);
+		Scalar upper1(hmax, smax, vmax);
+		
+		Scalar lower2(lmin, amin, bmin);
+		Scalar upper2(lmax, amax, bmax);
+		
+		Scalar lower3(rmin, gmin, Bmin);
+		Scalar upper3(rmax, gmav, Bmax);
+		
+		inRange(imgHSV, lower1, upper1, mask1);
+		inRange(imgLab, lower2, upper2, mask2);
+		inRange(imgRGB, lower3, upper3, mask3);
+
+		imshow("Image", img);
+		imshow("Image MaskHSV", mask1);
+		imshow("Image MaskLab", mask2);
+		imshow("Image MaskRGB", mask3);
+		waitKey(1);
+
+	}
+
+	return 0;
+}
